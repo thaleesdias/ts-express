@@ -8,17 +8,15 @@ const router = Router()
 const db = new Database
 
 router.get('/', (req: Request, res: Response) => {
-    console.log('oi')
-    let dados = db.list() 
 
-    console.log(dados)
-    res.send(dados)
+
+    res.send(db.list())
 
 })
 
-router.post('/',  (req: Request, res: Response) => {
+router.post('/', (req: Request, res: Response) => {
     const randomId = randomUUID()
-    const create = new Date().toDateString()
+    const create = new Date()
     const { title, description } = req.body
 
 
@@ -33,30 +31,53 @@ router.post('/',  (req: Request, res: Response) => {
     }
 
 
-     db.create(task)
+    db.create(task)
 
-    res.status(201).send()
+    res.status(201).send({ "msg": "task criada!" })
 })
 
 router.put('/:id', (req: Request, res: Response) => {
     const id = req.params.id;
 
-    
-    res.status(200).send(id)
+    const { title, description, completed_at } = req.body
+
+    const existingTask : Task | undefined = db.getTaskById(id)
+
+    if (existingTask === undefined) {
+        return res.status(404).send({message: 'nao encontrado'})
+    }
+
+    const updateTask: Task = {
+        id: id,
+        title: title,
+        description: description,
+        completed_at: completed_at,
+        created_at: existingTask.created_at,
+        updated_at: new Date()
+
+    }
+
+
+
+
+
+    db.update(id, updateTask)
+
+    res.status(200).send({ "message": "ok" })
 })
 
-router.delete('/remove/:id',(req:Request, res:Response)=>{
+router.delete('/remove/:id', (req: Request, res: Response) => {
     const id = req.params.id
     db.delete(id)
 
-    res.status(200).json({"message":"deletado com sucesso"})
+    res.status(200).json({ "message": "deletado com sucesso" })
 })
 
-router.delete('/delete/all',(req:Request, res:Response)=>{
-  
+router.delete('/delete/all', (req: Request, res: Response) => {
+
     db.deleteAll()
 
-    res.status(200).json({"message":"todos dados excluidos"})
+    res.status(200).json({ "message": "todos dados excluidos" })
 })
 
 
