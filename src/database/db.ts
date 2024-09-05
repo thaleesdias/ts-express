@@ -1,14 +1,4 @@
-
-
-
-export interface Task {
-    id: string,
-    title: string,
-    description: string,
-    completed_at: null | Date,
-    created_at: Date,
-    updated_at: Date
-}
+import Task from '../interface/task'
 
 export class Database {
     #tasks: Task[] = []
