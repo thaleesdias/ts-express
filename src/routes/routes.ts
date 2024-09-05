@@ -28,7 +28,7 @@ router.post('/', (req: Request, res: Response) => {
 
     db.create(task)
 
-    res.status(201).send({ "msg": "task criada!" })
+    res.status(201).send({ "msg": "task criada!","id":task.id })
 })
 
 router.put('/:id', (req: Request, res: Response) => {
