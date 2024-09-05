@@ -1,15 +1,12 @@
-import { Router, request } from 'express'
-import { Database, Task } from '../database/db'
+import { Router, Request, Response } from 'express'
+import { Database } from '../database/db'
 import { randomUUID } from 'crypto'
-import { Request, Response } from 'express'
-
+import Task from '../interface/task'
 
 const router = Router()
 const db = new Database
 
 router.get('/', (req: Request, res: Response) => {
-
-
     res.send(db.list())
 
 })
@@ -18,7 +15,6 @@ router.post('/', (req: Request, res: Response) => {
     const randomId = randomUUID()
     const create = new Date()
     const { title, description } = req.body
-
 
     const task: Task = {
         id: randomId,
@@ -30,7 +26,6 @@ router.post('/', (req: Request, res: Response) => {
 
     }
 
-
     db.create(task)
 
     res.status(201).send({ "msg": "task criada!" })
@@ -41,10 +36,10 @@ router.put('/:id', (req: Request, res: Response) => {
 
     const { title, description, completed_at } = req.body
 
-    const existingTask : Task | undefined = db.getTaskById(id)
+    const existingTask: Task | undefined = db.getTaskById(id)
 
     if (existingTask === undefined) {
-        return res.status(404).send({message: 'nao encontrado'})
+        return res.status(404).send({ message: 'nao encontrado' })
     }
 
     const updateTask: Task = {
@@ -57,10 +52,6 @@ router.put('/:id', (req: Request, res: Response) => {
 
     }
 
-
-
-
-
     db.update(id, updateTask)
 
     res.status(200).send({ "message": "ok" })
@@ -68,6 +59,7 @@ router.put('/:id', (req: Request, res: Response) => {
 
 router.delete('/remove/:id', (req: Request, res: Response) => {
     const id = req.params.id
+
     db.delete(id)
 
     res.status(200).json({ "message": "deletado com sucesso" })

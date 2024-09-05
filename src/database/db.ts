@@ -15,14 +15,6 @@ export class Database {
 
     create(task: Task) {
 
-       
-
-        // function fufu(): Boolean {
-        //     return true
-        // }
-
-        // fs.writeFileSync('dados.txt', task2)
-
         this.#tasks.push(task)
 
     }
